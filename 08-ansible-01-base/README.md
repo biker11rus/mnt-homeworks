@@ -243,4 +243,312 @@ localhost                  : ok=3    changed=0    unreachable=0    failed=0    s
 ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 ```
+
+## Ответы на необязательную часть
+1. Расшифровка
+```bash
+ ansible-vault decrypt ./group_vars/*/*
+
+Vault password: 
+
+Decryption successful
+
+```
+2. Шифрование переменной 
+```bash
+ ansible-vault encrypt_string PaSSw0rd --name some_fact
+
+New Vault password: 
+
+Confirm New Vault password: 
+
+some_fact: !vault |
+
+          $ANSIBLE_VAULT;1.1;AES256
+
+          61623335393635663832643638373431313865336436376166336530303765616634373966663936
+
+          6236656164616163643334373535343438386365363136370a666237326136343637373038636365
+
+          33316337343639643231373232623530656666343831653961663732613766376564623239633632
+
+          3039363733663763320a623335316263666333313936326336613334363334653134346338633666
+
+          3531
+
+Encryption successful
+
+cat ./group_vars/all/exmp.yml 
+
+---
+
+some_fact: !vault |
+
+          $ANSIBLE_VAULT;1.1;AES256
+
+          61623335393635663832643638373431313865336436376166336530303765616634373966663936
+
+          6236656164616163643334373535343438386365363136370a666237326136343637373038636365
+
+          33316337343639643231373232623530656666343831653961663732613766376564623239633632
+
+          3039363733663763320a623335316263666333313936326336613334363334653134346338633666
+
+          3531
+```
+3. Проверка 
+```bash
+ansible-playbook site.yml -i ./inventory/prod.yml --ask-vault-password
+Vault password: 
+
+PLAY [Print os facts] ***********************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************
+ok: [localhost]
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] *****************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ***************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "PaSSw0rd"
+}
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP **********************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+4. Добавление fedora
+```bash
+ansible-playbook site.yml -i ./inventory/prod.yml --ask-vault-password
+Vault password: 
+
+PLAY [Print os facts] ***********************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************
+ok: [localhost]
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] *****************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] ***************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "PaSSw0rd"
+}
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP **********************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+rkhozyainov@rkhozyainov-T530-ubuntu:~/devops/mnt-homeworks/08-ansible-01-base/playbook$ ansible-playbook site.yml -i ./inventory/prod.yml --ask-vault-password
+Vault password: 
+
+PLAY [Print os facts] ***********************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************************
+ok: [localhost]
+ok: [ubuntu]
+ok: [fedora]
+ok: [centos7]
+
+TASK [Print OS] *****************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+ok: [fedora] => {
+    "msg": "Fedora"
+}
+
+TASK [Print fact] ***************************************************************************************************************************************************
+ok: [localhost] => {
+    "msg": "PaSSw0rd"
+}
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+ok: [fedora] => {
+    "msg": "fedora default fact"
+}
+
+PLAY RECAP **********************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+fedora                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+```
+5.  Простой скрипт без проверок auto.sh
+```bash
+#!/bin/bash
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker run --rm -t -d --name ubuntu ubuntu:py3
+docker run --rm -t -d --name centos7 centos:7
+docker run --rm -t -d --name fedora pycontribs/fedora
+ansible-playbook -i inventory/prod.yml --vault-pass-file pass site.yml
+docker stop $(docker ps -a -q)
+
+```
+
+Проверка  
+
+```bash
+./auto.sh 
+
+31df1257fdaa
+
+"docker rm" requires at least 1 argument.
+
+See 'docker rm --help'.
+
+
+
+Usage:  docker rm [OPTIONS] CONTAINER [CONTAINER...]
+
+
+
+Remove one or more containers
+
+c1715204e5575b38317c5739ab53824ae625d989c89d57c343167c983648e605
+
+842f57497407601c5e2e34d5b01977c73c0dde464ef39aebbf310d6e7ff87b5b
+
+fc5df967cb0d355f72af1cd664e3499f0567cb0b2ec96c70fde185bf9fe48c5d
+
+
+
+PLAY [Print os facts] *************************************************************************************************************************************************************************************
+
+
+
+TASK [Gathering Facts] ************************************************************************************************************************************************************************************
+
+ok: [localhost]
+
+ok: [ubuntu]
+
+ok: [fedora]
+
+ok: [centos7]
+
+
+
+TASK [Print OS] *******************************************************************************************************************************************************************************************
+
+ok: [localhost] => {
+
+    "msg": "Ubuntu"
+
+}
+
+ok: [ubuntu] => {
+
+    "msg": "Ubuntu"
+
+}
+
+ok: [centos7] => {
+
+    "msg": "CentOS"
+
+}
+
+ok: [fedora] => {
+
+    "msg": "Fedora"
+
+}
+
+
+
+TASK [Print fact] *****************************************************************************************************************************************************************************************
+
+ok: [localhost] => {
+
+    "msg": "PaSSw0rd"
+
+}
+
+ok: [centos7] => {
+
+    "msg": "el default fact"
+
+}
+
+ok: [ubuntu] => {
+
+    "msg": "deb default fact"
+
+}
+
+ok: [fedora] => {
+
+    "msg": "fedora default fact"
+
+}
+
+
+
+PLAY RECAP ************************************************************************************************************************************************************************************************
+
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+fedora                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+localhost                  : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+
+fc5df967cb0d
+
+842f57497407
+
+c1715204e557
+
+```
+
 ---
