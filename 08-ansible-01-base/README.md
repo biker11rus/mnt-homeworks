@@ -551,4 +551,5 @@ c1715204e557
 
 ```
 
+6. https://github.com/biker11rus/mnt-homeworks/tree/MNT-7/08-ansible-01-base/playbook
 ---
