@@ -1,4 +1,4 @@
-**Описание site.yml**
+**Описание site.yml**  
 Плейбук состоит из 3 play
 1. Install Java содержит 5 task'ок
    - Установка переменной set_fact
