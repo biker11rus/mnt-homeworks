@@ -1,1 +1,7 @@
 files/*
+yc/key.json
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.terraform*
