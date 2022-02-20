@@ -10,4 +10,4 @@
 - name: filebeat-role
   src: git@github.com:biker11rus/filebeat-role.git
   scm: git
-  version: "v0.1.1"
+  version: "v0.1.0"
