@@ -41,8 +41,11 @@
 
 ---
 
-### Как оформить ДЗ?
+## Ответ
 
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
+Для проверки через tox необходимо поставить 2 коллекции ansible  для совместимости с ansible 
+* ansible-galaxy collection install community.docker
+* ansible-galaxy collection install community.general
+
 
 ---
