@@ -81,10 +81,7 @@ X-Kapacitor-Version: 1.6.4
 Date: Fri, 29 Apr 2022 08:33:03 GMT
 
 ```
-<p align="center">
-  <img width="1024" height="768" src="./screen/screen1.png">
-</p>
-
+![screen](screen/screen1.png)
 
 4. Перейдите в веб-интерфейс Chronograf (`http://localhost:8888`) и откройте вкладку `Data explorer`.
 
@@ -109,10 +106,7 @@ telegraf.conf
   ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
 ```
 
-<p align="center">
-  <img width="1024" height="768" src="./screen/screen2.png">
-</p>
-
+![screen](screen/screen2.png)
 
 5. Изучите список [telegraf inputs](https://github.com/influxdata/telegraf/tree/master/plugins/inputs). 
 Добавьте в конфигурацию telegraf следующий плагин - [docker](https://github.com/influxdata/telegraf/tree/master/plugins/inputs/docker):
@@ -162,10 +156,7 @@ user: telegraf:998
 ```
 где 998 группа Docker
 
-<p align="center">
-  <img width="1024" height="768" src="./screen/screen3.png">
-</p>
-
+![screen](screen/screen3.png)
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
 
