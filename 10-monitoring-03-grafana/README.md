@@ -29,6 +29,9 @@
 
 Решение домашнего задания - скриншот веб-интерфейса grafana со списком подключенных Datasource.
 
+![Grafana Data Sources](screen/screen1.png)
+
+
 ## Задание 2
 Изучите самостоятельно ресурсы:
 - [promql-for-humans](https://timber.io/blog/promql-for-humans/#cpu-usage-by-instance)
@@ -36,16 +39,26 @@
 
 Создайте Dashboard и в ней создайте следующие Panels:
 - Утилизация CPU для nodeexporter (в процентах, 100-idle)
-- CPULA 1/5/15
+- CPULA 1/5/15 
 - Количество свободной оперативной памяти
 - Количество места на файловой системе
 
 Для решения данного ДЗ приведите promql запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
 
+## Ответ
+  - Утилизация CPU для nodeexporter (в процентах, 100-idle) = "100 - (avg by (instance) (rate(node_cpu_seconds_total{job="nodeexporter",mode="idle"}"[1m])) * 100)
+  - CPULA 1/5/15 = "node_load1 node_load5 node_load15"
+  - Количество свободной оперативной памяти = "node_memory_MemFree_bytes{job="nodeexporter"}"
+  - Количество места на файловой системе = "100 - node_filesystem_avail_bytes{fstype="ext4"} / node_filesystem_size_bytes{fstype="ext4"} * 100"
+
+![Dashboard](screen/screen2.png)
+
 ## Задание 3
 Создайте для каждой Dashboard подходящее правило alert (можно обратиться к первой лекции в блоке "Мониторинг").
 
 Для решения ДЗ - приведите скриншот вашей итоговой Dashboard.
+
+![Alert](screen/screen3.png)
 
 ## Задание 4
 Сохраните ваш Dashboard.
@@ -55,6 +68,8 @@
 Далее скопируйте отображаемое json-содержимое в отдельный файл и сохраните его.
 
 В решении задания - приведите листинг этого файла.
+
+[Dashboard json](dashboard.json)
 
 ---
 
